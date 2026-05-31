@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Detayı</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="ad-detail-container">
+        <div class="ad-detail"></div>
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+                
+                fetch('/check_session')
+                    .then(response => response.json())
+                    .then(sessionData => {
+                        if (sessionData.loggedIn === true) {
+                            const loginBtn = document.getElementById('login_button');
+                            if (loginBtn) {
+                                loginBtn.innerText = "Hesabım";
+                                loginBtn.onclick = function() {
+                                    window.location.href = 'profile.html';
+                                };
+                            }
+                            
+                        }
+                    });
+            });
+    </script>
+    </script>
+
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementsByClassName('footer')[0].innerHTML = data;
+            });
+    </script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const adId = urlParams.get('id');
+
+        if (adId) {
+            fetch(`/ad/${adId}`)
+                .then(response => response.json())
+                .then(ad => {
+                    const detailContainer = document.querySelector('.ad-detail');
+                    detailContainer.innerHTML = `
+                        <img src="${ad.image_url}" alt="${ad.title}" style="max-width: 100%; height: auto;">
+                        <h2>${ad.title}</h2>
+                        <p><strong>Açıklama:</strong> ${ad.description}</p>
+                        <p><strong>Fiyat:</strong> ${ad.price} TL</p>
+                        <p><strong>Kategori:</strong> ${ad.category}</p>
+                        <p><strong>İlan Tarihi:</strong> ${new Date(ad.created_at).toLocaleDateString()}</p>
+                        
+                        <div class="contact-section">
+                            <button id="contact-btn">İletişime Geç</button>
+                        </div>
+                    `;
+
+                    // İletişim butonu için event listener
+                    fetch('/check_session')
+                        .then(response => response.json())
+                        .then(sessionData => {
+                            if (sessionData.loggedIn && sessionData.userId == ad.user_id) {
+                                document.getElementById('contact-btn').style.display = 'none';
+                            } else {
+                                document.getElementById('contact-btn').addEventListener('click', function() {
+                                    if (sessionData.loggedIn) {
+                                        // Şimdilik inaktif, sadece alert göster
+                                        alert('İletişim özelliği yakında aktif olacak!');
+                                    } else {
+                                        alert('İletişime geçmek için önce giriş yapmalısınız!');
+                                        window.location.href = 'login.html';
+                                    }
+                                });
+                            }
+                        });
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                    document.querySelector('.ad-detail').innerHTML = '<p>İlan bulunamadı.</p>';
+                });
+        } else {
+            document.querySelector('.ad-detail').innerHTML = '<p>Geçersiz ilan ID.</p>';
+        }
+    </script>
+</body>
+</html>

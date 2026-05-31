@@ -1,0 +1,248 @@
+/* Sayfa genelinde taşmaları önlemek için evrensel ayar */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif; /* Daha temiz bir görünüm için */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* Footer'ı her zaman en altta tutmak için */
+}
+
+/* Header Tasarımı */
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 100px;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 0 40px; /* Logonun ve butonun ekranın tam kenarlarına yapışmasını engeller */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Şık bir alt gölge */
+}
+
+/* Kategoriler Menüsü */
+.categories {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap; /* Dar ekranda butonların alt satıra düzenli geçmesini sağlar */
+  margin: 20px 0;
+  width: 100%;
+  gap: 15px; /* Margin yerine 'gap' kullanmak Flexbox'ta çok daha temizdir */
+}
+
+.category_button {
+  padding: 10px 20px; /* İç boşluklar düzenlendi */
+  background-color: #e1e1e1;
+  border-radius: 10px;
+  border: none; /* Varsayılan siyah çerçeveleri kaldırır */
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s ease; /* Üzerine gelince rengin yumuşak değişmesini sağlar */
+}
+
+.category_button:hover {
+  background-color: #d1d1d1;
+}
+
+/* Giriş/Kayıt Butonu Özel Tasarımı */
+#login_button {
+  background-color: black;
+  color: white;
+  border: none; 
+  padding: 12px 24px; /* Duplicate (çift yazılmış) padding temizlendi */
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+#login_button:hover {
+  background-color: #333; /* Üzerine gelince çok koyu bir griye döner */
+}
+
+/* İlan Ekle Butonunun Hizalaması */
+.add_ads {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end; /* Flexbox'ta 'right' yerine standart kullanım flex-end'dir */
+  padding: 0 40px; /* Header ile aynı hizada durmasını sağlar */
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+/* İlan Kartları Alanı */
+.ads {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; 
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px;
+  gap: 25px; /* İlan kartları arasına düzenli boşluk bırakır */
+  flex: 1; /* Sayfa ortasını doldurarak footer'ı aşağı iter */
+}
+
+/* İlan Kartı Tasarımı */
+.ad_card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px; /* Sabit genişlik */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.ad_card:hover {
+  transform: translateY(-5px); /* Üzerine gelince hafif yukarı kalkar */
+}
+
+.ad_card img {
+  width: 200px; 
+  height: 150px;
+  object-fit: cover; 
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.ad_card h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.ad_card p {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.ad_card button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.ad_card button:hover {
+  background-color: #c82333;
+}
+
+/* Profil Sayfası */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: calc(100vh - 160px);
+}
+
+.profile-container h2 {
+  margin-bottom: 20px;
+}
+
+.user-ads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.profile-container button {
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.profile-container button:hover {
+  background-color: #333;
+}
+
+/* İlan Detay Sayfası */
+.ad-detail-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: calc(100vh - 160px);
+}
+
+.ad-detail {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+}
+
+.ad-detail img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.ad-detail h2 {
+  margin-bottom: 10px;
+}
+
+.ad-detail p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.contact-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#contact-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#contact-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Footer Tasarımı */
+.footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 60px; /* Tıklama ve okunabilirlik için biraz büyütüldü */
+  width: 100%;
+  background-color: #f1f1f1;
+  margin-top: auto; /* Sayfada az ilan olsa bile footer'ın en alta yapışmasını garanti eder */
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Sitesi-Kayıt Ol</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="login-container">
+        <div class="login-form">
+        <form action="http://localhost:3010/register" method="POST">
+            <div class="login-boxes">
+                <h2>Kayıt Ol</h2>
+                <input type="text" name="first_name" placeholder="Adınız" required>
+                <input type="text" name="last_name" placeholder="Soyadınız" required>
+                <input type="date" name="dob" required title="Doğum Tarihi">
+                <input type="email" name="email" placeholder="E-posta Adresi" required>
+                <input type="tel" name="phone" placeholder="Telefon Numarası (Örn: 0532...)">
+                
+                <input type="password" name="password" placeholder="Şifre" required>
+                <input type="password" name="password_confirm" placeholder="Şifreyi Tekrar Girin" required>
+            </div>
+
+            <div class="login-buttons">
+                <button id="loginButton" type="submit">Kayıt Ol</button>
+                <br>
+                <span>Hesabınız var mı?</span>
+                <button type="button" onclick="location.href='login.html'">Giriş Yap</button>
+            </div>
+        </form>
+        </div>
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+            });
+    </script>
+    
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementsByClassName('footer')[0].innerHTML = data;
+            });
+    </script>
+</body>
+</html>

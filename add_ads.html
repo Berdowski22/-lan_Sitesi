@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Ads</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="add_ads.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="add-ads-container">
+        <div class="add-ads-form">
+            <form action="http://localhost:3010/add_ads" method="POST" enctype="multipart/form-data">
+                <div class="add-ads-boxes">
+                    <h2>İlan Ekle</h2>
+                    <input type="text" name="baslik" placeholder="İlan Başlığı" required>
+                    <input type="number" name="fiyat" placeholder="Fiyat (TL)" required>
+                    <select name="kategori" required>
+                        <option value="">Kategori Seçiniz</option>
+                        <option value="Ev">Ev</option>
+                        <option value="Araç">Araç</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                    <input type="file" name="image" accept="image/*" required>
+                    <label for="aciklama">İlan Açıklaması:</label>
+                    <textarea name="aciklama" placeholder="İlan Açıklaması" required></textarea>
+
+                </div>
+
+                <div class="add-ads-buttons">
+                    <button type="submit" onclick="addAd()">İlan Ekle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+         fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+                
+                fetch('/check_session')
+                    .then(response => response.json())
+                    .then(sessionData => {
+                        if (sessionData.loggedIn === true) {
+                            const loginBtn = document.getElementById('login_button');
+                            if (loginBtn) {
+                                loginBtn.innerText = "Hesabım";
+                                loginBtn.onclick = function() {
+                                    window.location.href = 'profile.html';
+                                };
+                            }
+                            
+                        }
+                    });
+            });
+    </script>
+    <script>
+        function addAd() {
+            fetch('/add_ads')
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert('İlan başarıyla eklendi!');
+                    window.location.href = 'home.html';
+                } else {
+                    alert('İlan eklenirken bir hata oluştu: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                alert('İlan eklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+            });
+        }
+        
+    </script>
+    <script>    
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementsByClassName('footer')[0].innerHTML = data;
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Sitesi</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+
+    <div class="categories">
+        <button class="category_button">Ev</button>
+        <button class="category_button">Araç</button>
+        <button class="category_button">Diğer</button>
+        <button class ="category_button" id="Filtre">Filtrele</button>
+    </div>
+
+    <div class="ads"></div>
+
+    <div class="add_ads">
+        <button class="category_button" onclick="ilanEkleKontrolü()">+</button>
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementsByClassName('footer')[0].innerHTML = data;
+            });
+    </script>
+
+   <script>
+        fetch('/ads')
+            .then(response => response.json())
+            .then(ads => {
+                const adsContainer = document.querySelector('.ads');
+                ads.forEach(ad => {
+                    const adCard = document.createElement('div');
+                    adCard.classList.add('ad_card');
+                    
+                    adCard.onclick = () => {
+                        window.location.href = `ad_detail.html?id=${ad.id}`;
+                    };
+                    
+                    adCard.innerHTML = `
+                        <img src="${ad.image_url}" alt="${ad.title}">
+                        <h3>${ad.title}</h3>
+                        <p>${ad.description}</p>
+                        <p>Fiyat: ${ad.price} TL</p>
+                        <button class="favorite-btn" onclick="favoriDegistir(this, ${ad.id}, event)">🤍 Favoriye Ekle</button>
+                    `;
+                    adsContainer.appendChild(adCard);
+                });
+            })
+            .catch(error => console.error('Hata:', error));
+    </script>
+
+    <script>
+        function favoriDegistir(butonElementi, ilanId, event) {
+            event.stopPropagation(); 
+
+            fetch('/toggle_favorite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ad_id: ilanId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success==false && data.error === 'Giriş yapmamışsınız') {
+                    alert('İlan eklemek için önce giriş yapmalısınız!');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                else if (data.success) {
+                    if (data.status === 'added') {
+                        butonElementi.innerText = '❤️ Favorilerde';
+                        butonElementi.style.color = 'red';
+                    } else if (data.status === 'removed') {
+                        butonElementi.innerText = '🤍 Favoriye Ekle';
+                        butonElementi.style.color = 'black';
+                    }
+                } else {
+                    alert(data.error); 
+                }
+            })
+            .catch(err => console.error('Bağlantı hatası:', err));
+        }
+    </script>
+
+    <script>
+        function ilanEkleKontrolü() {
+            fetch('/check_session')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.loggedIn) {
+                        window.location.href = 'add_ads.html';
+                    } else {
+                        alert('İlan eklemek için önce giriş yapmalısınız!');
+                        window.location.href = 'login.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                });
+        }
+    </script>
+
+   <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+                
+                fetch('/check_session')
+                    .then(response => response.json())
+                    .then(sessionData => {
+                        if (sessionData.loggedIn === true) {
+                            const loginBtn = document.getElementById('login_button');
+                            if (loginBtn) {
+                                loginBtn.innerText = "Hesabım";
+                                loginBtn.onclick = function() {
+                                    window.location.href = 'profile.html';
+                                };
+                            }
+                            
+                        }
+                    });
+            });
+    </script>
+</body>
+</html>

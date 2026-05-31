@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Sitesi - Giriş Yap</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="login-container">
+        <div class="login-form">
+        <form action="http://localhost:3010/login" method="POST">
+            <div class="login-boxes">
+                <h2>Giriş Yap</h2>
+                <input type="email" name="email" placeholder="E-posta" required>
+                <input type="password" name="password" placeholder="Şifre" required>
+            </div>
+
+            <div class="login-buttons">
+                <button id="loginButton" type="submit">Giriş Yap</button>
+                <br>
+                <span>Hesabınız yok mu?</span>
+                <button type="button" onclick="location.href='register.html'">Kayıt Ol</button>
+            </div>
+
+        </form>
+        </div>
+    </div>
+
+
+    <div class="footer"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+            });
+    </script>
+
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementsByClassName('footer')[0].innerHTML = data;
+            });
+    </script>
+</body>
+</html>

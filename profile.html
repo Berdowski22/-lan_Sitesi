@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesabım</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+<div class="profile-container">
+        <h2>İlanlarım</h2>
+        <div class="user-ads"></div>
+        
+        <hr style="margin: 30px 0;"> <h2>Favorilerim</h2>
+        <div class="favorite-ads" style="display: flex; gap: 20px; flex-wrap: wrap;"></div>
+        
+        <button onclick="logout()" style="margin-top: 20px;">Çıkış Yap</button>
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+                
+                fetch('/check_session')
+                    .then(response => response.json())
+                    .then(sessionData => {
+                        if (sessionData.loggedIn === true) {
+                            const loginBtn = document.getElementById('login_button');
+                            if (loginBtn) {
+                                loginBtn.innerText = "Çıkış Yap";
+                                loginBtn.onclick = function() {
+                                    logout();
+                                };
+                            }
+                        }
+                    });
+            });
+    </script>
+
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementsByClassName('footer')[0].innerHTML = data;
+            });
+    </script>
+
+    <script>
+        fetch('/my_ads')
+            .then(response => response.json())
+            .then(ads => {
+                const adsContainer = document.querySelector('.user-ads');
+                if (ads.length === 0) {
+                    adsContainer.innerHTML = '<p>Henüz ilanınız yok.</p>';
+                } else {
+                    ads.forEach(ad => {
+                        const adCard = document.createElement('div');
+                        adCard.classList.add('ad_card');
+                        adCard.onclick = () => {
+                            window.location.href = `ad_detail.html?id=${ad.id}`;
+                        };
+                        adCard.innerHTML = `
+                            <img src="${ad.image_url}" alt="${ad.title}">
+                            <h3>${ad.title}</h3>
+                            <p>${ad.description}</p>
+                            <p>Fiyat: ${ad.price} TL</p>
+                            <button onclick="deleteAd(${ad.id}); event.stopPropagation();">Sil</button>
+                        `;
+                        adsContainer.appendChild(adCard);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                window.location.href = 'login.html';
+            });
+    </script>
+
+    <script>
+        function logout() {
+            if(confirm("Çıkmak istediğinize emin misiniz?"))
+            window.location.href = '/logout';
+        }
+
+        function deleteAd(adId) {
+            if (confirm('Bu ilanı silmek istediğinizden emin misiniz?')) {
+                fetch('/delete_ad', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: adId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('İlan silindi.');
+                        location.reload();
+                    } else {
+                        alert('İlan silinemedi: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                    alert('Bir hata oluştu.');
+                });
+            }
+        }
+    </script>
+
+    <script>
+        fetch('/my_favorites')
+            .then(response => response.json())
+            .then(favorites => {
+                const favContainer = document.querySelector('.favorite-ads');
+                if (favorites.length === 0) {
+                    favContainer.innerHTML = '<p>Henüz favori ilanınız yok.</p>';
+                } else {
+                    favorites.forEach(ad => {
+                        const adCard = document.createElement('div');
+                        adCard.classList.add('ad_card');
+                        adCard.onclick = () => {
+                            window.location.href = `ad_detail.html?id=${ad.id}`;
+                        };
+                        adCard.innerHTML = `
+                            <img src="${ad.image_url}" alt="${ad.title}" style="max-width: 100%;">
+                            <h3>${ad.title}</h3>
+                            <p>Fiyat: ${ad.price} TL</p>
+                        `;
+                        favContainer.appendChild(adCard);
+                    });
+                }
+            })
+            .catch(error => console.error('Favoriler yüklenirken hata:', error));
+    </script>
+</body>
+</html>
